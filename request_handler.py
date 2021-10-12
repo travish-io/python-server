@@ -1,9 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from animals import get_all_animals, get_single_animal, create_animal
-from customers.request import get_all_customers, get_single_customer
-from employees import get_all_employees, get_single_employee
-from locations import get_all_locations, get_single_location
+from animals import get_all_animals, get_single_animal, create_animal, delete_animal, update_animal
+from customers import get_all_customers, get_single_customer, create_customer, delete_customer, update_customer
+from employees import get_all_employees, get_single_employee, create_employee, delete_employee, update_employee
+from locations import get_all_locations, get_single_location, delete_location, update_location
 
 
 # Here's a class. It inherits from another class.
@@ -100,15 +100,43 @@ class HandleRequests(BaseHTTPRequestHandler):
         # Parse the URL
         (resource, id) = self.parse_url(self.path)
 
-        # Initialize new animal
-        new_animal = None
+        # Initialize new things
+        new_dict = None
 
         # Add a new animal to the list
         if resource == "animals":
-            new_animal = create_animal(post_body)
+            new_dict = create_animal(post_body)
+
+        if resource == "employees":
+            new_dict = create_employee(post_body)
+
+        if resource == "customers":
+            new_dict = create_customer(post_body)
+
+        self.wfile.write(f"{new_dict}".encode())
+
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            delete_animal(id)
+
+        if resource == "locations":
+            delete_location(id)
+
+        if resource == "employees":
+            delete_employee(id)
+
+        if resource == "customers":
+            delete_customer(id)
 
         # Encode the new animal and send in response
-        self.wfile.write(f"{new_animal}".encode())
+        self.wfile.write("".encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
@@ -116,7 +144,29 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_PUT(self):
         """Handles PUT requests to the server
         """
-        self.do_POST()
+        self._set_headers(204)
+        content_len = int(self.headers.get('content-length', 0))
+        post_body = self.rfile.read(content_len)
+        post_body = json.loads(post_body)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            update_animal(id, post_body)
+
+        if resource == "employees":
+            update_employee(id, post_body)
+
+        if resource == "locations":
+            update_location(id, post_body)
+
+        if resource == "customers":
+            update_customer(id, post_body)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
     def parse_url(self, path):
         # Just like splitting a string in JS.
