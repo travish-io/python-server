@@ -116,6 +116,8 @@ class HandleRequests(BaseHTTPRequestHandler):
         self.wfile.write(f"{new_dict}".encode())
 
     def do_DELETE(self):
+        """Handles DELETE requests to the server
+        """
         # Set a 204 response code
         self._set_headers(204)
 
