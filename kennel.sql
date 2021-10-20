@@ -61,8 +61,8 @@ INSERT INTO `Animal` VALUES (null, "Daps", "Kennel", "Boxer", 2, 2);
 
 
 SELECT
-    a.id,
-    a.name,
-    a.address    
-FROM location a
-WHERE a.id = 2
+    *   
+FROM employee
+
+
+
