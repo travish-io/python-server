@@ -162,7 +162,6 @@ class HandleRequests(BaseHTTPRequestHandler):
     def do_PUT(self):
         """Handles PUT requests to the server
         """
-        self._set_headers(204)
         content_len = int(self.headers.get('content-length', 0))
         post_body = self.rfile.read(content_len)
         post_body = json.loads(post_body)
@@ -174,16 +173,16 @@ class HandleRequests(BaseHTTPRequestHandler):
 
         # Delete a single animal from the list
         if resource == "animals":
-            update_animal(id, post_body)
+            success = update_animal(id, post_body)
 
         elif resource == "employees":
-            update_employee(id, post_body)
+            success = update_employee(id, post_body)
 
         elif resource == "locations":
-            update_location(id, post_body)
+            success = update_location(id, post_body)
 
         elif resource == "customers":
-            update_customer(id, post_body)
+            success = update_customer(id, post_body)
 
         if success:
             self._set_headers(204)
